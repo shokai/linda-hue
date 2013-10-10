@@ -20,25 +20,23 @@ EM::run do
       p tuple
       next unless tuple.size == 2
       _, state = tuple
-      results = case state.downcase
-      when "on"
-        hue.lights.map do |light|
+      results =
+        case state.downcase
+        when "on"
+          hue.lights.map do |light|
           light.on = true
         end
-      when "off"
-        hue.lights.map do |light|
+        when "off"
+          hue.lights.map do |light|
           light.on = false
         end
-      when "random"
-        hue.lights.map do |light|
-          light.set_state({
-            :on => true,
-            :hue => rand(65535),
-            :saturation => rand(255),
-            :brightness => rand(255)
-          }, 1)
+        when "random"
+          hue.lights.map do |light|
+            state = { :on => true, :hue => rand(65535),
+                      :saturation => rand(255), :brightness => rand(255) }
+            light.set_state state, 1
+          end
         end
-      end
       tuple << results
       ts.write tuple
     end
