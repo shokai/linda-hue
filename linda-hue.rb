@@ -18,27 +18,35 @@ EM::run do
     puts "connect!! <#{linda.io.session}> (#{linda.io.type})"
     ts.watch ["hue"] do |tuple|
       p tuple
-      next unless tuple.size == 2
-      _, state = tuple
-      results =
-        case state.downcase
-        when "on"
-          hue.lights.map do |light|
-          light.on = true
-        end
-        when "off"
-          hue.lights.map do |light|
-          light.on = false
-        end
-        when "random"
-          hue.lights.map do |light|
+      if tuple.size == 2
+        _, state = tuple
+        results =
+          case state.downcase
+          when "on"
+            hue.lights.map do |light|
+            light.on = true
+          end
+          when "off"
+            hue.lights.map do |light|
+            light.on = false
+          end
+          when "random"
+            hue.lights.map do |light|
             state = { :on => true, :hue => rand(65535),
-                      :saturation => rand(255), :brightness => rand(255) }
+              :saturation => rand(255), :brightness => rand(255) }
             light.set_state state, 1
           end
+          end
+        tuple << results
+        ts.write tuple
+      elsif tuple.size == 6
+        if tuple[2] == "hsb"
+          _,id,_,h,s,b = tuple
+          state = { :on => true, :hue => h.to_i,
+            :saturation => s.to_i, :brightness => b.to_i }
+          hue.lights[id.to_i].set_state state, 1
         end
-      tuple << results
-      ts.write tuple
+      end
     end
   end
 
