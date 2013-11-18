@@ -5,7 +5,8 @@ controll [Philips's hue](http://www.meethue.com) with [RocketIO::Linda](https://
 * https://github.com/shokai/linda-hue
 * watch tuple ["hue", "on"] and turn on all hue
 * watch tuple ["hue", "off"] and turn off all hue
-* watch tuple ["hue", "random"] and set random HSB value.
+* watch tuple ["hue", "random"] and set random HSB value
+* watch tuple ["hue", 0, "hsb", 60000, 180, 200] and set HSB(60000,180,200) to Hue id=0
 
 <img src="http://gyazo.com/bd7c937a43d3c272aa0dfa46f76d6282.gif">
 
