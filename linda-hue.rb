@@ -46,6 +46,11 @@ EM::run do
             :saturation => s.to_i, :brightness => b.to_i }
           hue.lights[id.to_i].set_state state, 1
         end
+      elsif tuple.size == 3
+        if ["on", "off"].include? tuple[2]
+          _,id,stat = tuple
+          hue.lights[id.to_i].on = (stat == "on") ? true : false
+        end
       end
     end
   end
